@@ -170,13 +170,11 @@ def main() -> None:
         Ls, Ps, Is = _stop_state(params0)
 
         # Fit log10(P0), log10(I0)
-        x0 = np.array([np.log10(max(Ps, 1e-12)), np.log10(max(Is, 1e-12))], dtype=float)
-
-        # Wide bounds but keep within sane numeric ranges
-        # P0 in [1e-12, 1e2], I0 in [1e-6, 1e3]
         lb = np.array([np.log10(1e-12), np.log10(1e-6)], dtype=float)
         ub = np.array([np.log10(1e2),   np.log10(1e3)], dtype=float)
 
+        x0_raw = np.array([np.log10(max(Ps, 1e-12)), np.log10(max(Is, 1e-6))], dtype=float)
+        x0 = np.minimum(np.maximum(x0_raw, lb), ub)  # clamp into bounds
         res = least_squares(
             fun=lambda th: _resid_fit_P0_I0(th, days_post, log10_post, params0),
             x0=x0,
