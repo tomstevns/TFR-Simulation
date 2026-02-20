@@ -196,6 +196,8 @@ def load_qpcr_csv(
             raw_date = (r.get(date_column) or "").strip()
             raw_val = (r.get(value_column) or "").strip()
 
+
+
             # Skip empty lines
             if raw_date == "" and raw_val == "":
                 continue
